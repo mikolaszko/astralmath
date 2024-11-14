@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import cameraIcon from "../../public/camera.svg"
 
 import { api } from "~/utils/api";
-import { file2Base64 } from "~/utils/file";
+import { encodeFileToBase64 } from "~/utils/file";
 import Image from "next/image";
 
 export default function Home() {
@@ -15,12 +15,14 @@ export default function Home() {
   const handleCapture = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
-      file2Base64(file).then(
-        (base64) => {
-          const explanation = solveEquation.mutateAsync({ base64Image: base64 });
-          console.log(explanation)
-        }).catch((error) => console.error("Error:", error))
-    }
+      let base64Image;
+      encodeFileToBase64(file)
+        .then((data) => {
+          base64Image = data;
+        })
+        .catch((error) => console.error("Error", error));
+      const response = await solveEquation.mutateAsync({ base64Image: base64Image || "" })
+    };
   }
 
   return (
