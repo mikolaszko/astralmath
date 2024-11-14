@@ -1,21 +1,25 @@
-import Image from "next/image";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import cameraIcon from "../../public/camera.svg"
 
 import { api } from "~/utils/api";
+import { file2Base64 } from "~/utils/file";
+import Image from "next/image";
 
 export default function Home() {
-  const hello = api.post.hello.useQuery({ text: "from tRPC" });
+  const solveEquation = api.math.solveEquation.useMutation();
 
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
-  const handleCapture = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCapture = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
-      const url = URL.createObjectURL(file)
-      setImageUrl(url)
+      file2Base64(file).then(
+        (base64) => {
+          const explanation = solveEquation.mutateAsync({ base64Image: base64 });
+          console.log(explanation)
+        }).catch((error) => console.error("Error:", error))
     }
   }
 
