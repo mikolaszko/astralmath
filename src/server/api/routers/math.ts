@@ -5,14 +5,8 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
-
 })
-const mathTutor = await openai.beta.assistants.create({
-  name: "Math Tutor",
-  instructions: "You are a personal math tutor. Write and run code to answer math questions.",
-  tools: [{ type: "code_interpreter" }],
-  model: "gpt-4o"
-});
+
 
 export const mathRouter = createTRPCRouter({
   extractMathExpr: publicProcedure
@@ -48,32 +42,7 @@ export const mathRouter = createTRPCRouter({
     .input(z.object({ mathEquation: z.string() }))
     .mutation(async ({ input }) => {
       try {
-        const thread = await openai.beta.threads.create();
-        await openai.beta.threads.messages.create(
-          thread.id,
-          {
-            role: "user",
-            content: `I need to solve the equation ${input.mathEquation}. Can you help me by breaking problem step by step?`
-          }
-        );
-        let run = await openai.beta.threads.runs.createAndPoll(
-          thread.id,
-          {
-            assistant_id: mathTutor.id,
-            instructions: "Please address the user as Jane Doe. The user has a premium account."
-          }
-        );
-        if (run.status === 'completed') {
-          const messages = await openai.beta.threads.messages.list(
-            run.thread_id
-          );
-          console.log("Messages", messages)
-          return messages
-        } else {
-          console.log(run.status);
-        }
       } catch {
-
       }
     })
 });

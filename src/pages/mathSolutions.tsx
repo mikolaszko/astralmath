@@ -1,29 +1,30 @@
-import { simplifyExpression } from "@taskbase/mathsteps";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Skeleton } from "~/components/ui/skeleton";
 import { api } from "~/utils/api";
+
 
 type MathSolutionsProps = {
   gramaticalExpression: string;
 }
 
-
-
 export const MathSolutions = ({ gramaticalExpression }: MathSolutionsProps) => {
   const extractMathExpr = api.math.solveEquation.useMutation();
-  const steps = simplifyExpression("1/(5x) + 1/3 = 4/3");
+  const [steps, setSteps] = useState("")
   useEffect(() => {
     extractMathExpr.mutateAsync({ mathEquation: gramaticalExpression })
-      .then((data) => {
-        console.log(data)
-      })
-      .catch((error) => {
-        console.log("Error with solving", error)
-      })
   }, [gramaticalExpression])
-  console.log(steps)
 
   return (
     <div className="flex flex-col">
-    </div>
+      {extractMathExpr.isPending && (
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px] bg-zinc-600" />
+          <Skeleton className="h-4 w-[200px] bg-zinc-600" />
+          <Skeleton className="h-4 w-[150px] bg-zinc-600" />
+          <Skeleton className="h-4 w-[100px] bg-zinc-600" />
+          <Skeleton className="h-4 w-[50px] bg-zinc-600" />
+        </div>
+      )}
+    </div >
   )
 }
