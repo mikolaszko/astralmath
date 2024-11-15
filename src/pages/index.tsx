@@ -6,22 +6,27 @@ import cameraIcon from "../../public/camera.svg"
 import { api } from "~/utils/api";
 import { encodeFileToBase64 } from "~/utils/file";
 import Image from "next/image";
+import { LoadingSpinner } from "~/components/ui/loader";
+import { MathSolutions } from "./mathSolutions";
 
 export default function Home() {
-  const solveEquation = api.math.solveEquation.useMutation();
+  const extractMathExpr = api.math.extractMathExpr.useMutation();
 
   const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [mathExpr, setMathExpr] = useState("")
 
   const handleCapture = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
-      let base64Image;
       encodeFileToBase64(file)
         .then((data) => {
-          base64Image = data;
+          extractMathExpr.mutateAsync({ base64Image: data })
+            .then((result) => {
+              setMathExpr(result || "Model couldn't handle the image :///")
+            })
+            .catch((error) => console.error("LLM error", error));
         })
-        .catch((error) => console.error("Error", error));
-      const response = await solveEquation.mutateAsync({ base64Image: base64Image || "" })
+        .catch((error) => console.error("Incorrect Image", error));
     };
   }
 
@@ -59,10 +64,13 @@ export default function Home() {
             />
             <label htmlFor="captureInput" className="cursor-pointer bg-blue-600 hover:bg-blue-700 rounded-md">
               <Button className="w-full bg-transparent text-white pointer-events-none">
-                Take Picture
+                {extractMathExpr.isPending ?
+                  <LoadingSpinner /> : "Take Picture"
+                }
               </Button>
             </label>
           </div>
+          <MathSolutions gramaticalExpression={mathExpr} />
         </CardContent>
       </Card>
     </div >

@@ -7,16 +7,15 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 
 })
-// Mocked DB
-interface MathProblem {
-  id: number;
-  base64: string;
-}
-const mathProblems: MathProblem[] = [
-];
+const mathTutor = await openai.beta.assistants.create({
+  name: "Math Tutor",
+  instructions: "You are a personal math tutor. Write and run code to answer math questions.",
+  tools: [{ type: "code_interpreter" }],
+  model: "gpt-4o"
+});
 
 export const mathRouter = createTRPCRouter({
-  solveEquation: publicProcedure
+  extractMathExpr: publicProcedure
     .input(z.object({ base64Image: z.string() }))
     .mutation(async ({ input }) => {
       try {
@@ -28,7 +27,7 @@ export const mathRouter = createTRPCRouter({
               content: [
                 {
                   type: "text",
-                  text: "Show how to solve this mathematical equation step by step in an educational manner"
+                  text: "Please scan this image and process the extracted for mathematical expression in asciimath format, dont output steps on how to solve the problem, I need just the mathematical expression"
                 },
                 {
                   type: "image_url",
@@ -40,20 +39,41 @@ export const mathRouter = createTRPCRouter({
             }
           ],
         })
-        const problem: MathProblem = {
-          id: mathProblems.length + 1,
-          base64: input.base64Image,
-        };
-        mathProblems.push(problem);
         return response.choices[0]?.message.content
-      } catch {
-        throw new Error('Failed to solve the equation');
+      } catch (error) {
+        console.error("Error:", error)
       }
     }),
+  solveEquation: publicProcedure
+    .input(z.object({ mathEquation: z.string() }))
+    .mutation(async ({ input }) => {
+      try {
+        const thread = await openai.beta.threads.create();
+        await openai.beta.threads.messages.create(
+          thread.id,
+          {
+            role: "user",
+            content: `I need to solve the equation ${input.mathEquation}. Can you help me by breaking problem step by step?`
+          }
+        );
+        let run = await openai.beta.threads.runs.createAndPoll(
+          thread.id,
+          {
+            assistant_id: mathTutor.id,
+            instructions: "Please address the user as Jane Doe. The user has a premium account."
+          }
+        );
+        if (run.status === 'completed') {
+          const messages = await openai.beta.threads.messages.list(
+            run.thread_id
+          );
+          console.log("Messages", messages)
+          return messages
+        } else {
+          console.log(run.status);
+        }
+      } catch {
 
-  getById: publicProcedure
-    .input(z.object({ id: z.number() }))
-    .query(({ input }) => {
-      return mathProblems.at(input.id) ?? null;
-    }),
+      }
+    })
 });

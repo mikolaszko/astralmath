@@ -14,6 +14,9 @@ dependencies:
   '@tanstack/react-query':
     specifier: ^5.50.0
     version: 5.50.1(react@18.3.1)
+  '@taskbase/mathsteps':
+    specifier: ^1.0.0
+    version: 1.0.0
   '@trpc/client':
     specifier: ^11.0.0-rc.446
     version: 11.0.0-rc.446(@trpc/server@11.0.0-rc.446)
@@ -409,6 +412,13 @@ packages:
     dependencies:
       '@tanstack/query-core': 5.50.1
       react: 18.3.1
+    dev: false
+
+  /@taskbase/mathsteps@1.0.0:
+    resolution: {integrity: sha512-N6dJWb95cSrbOCwv5t5ddgrjBMB2m0EUvgZX4oU2ArJ1GD7s6sMFTBmekZPdzIdalO5NHp6Fwym7t2qUuQZ2AQ==}
+    engines: {node: '>=6.0.0'}
+    dependencies:
+      mathjs: 3.11.2
     dev: false
 
   /@trpc/client@11.0.0-rc.446(@trpc/server@11.0.0-rc.446):
@@ -960,6 +970,10 @@ packages:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
 
+  /complex.js@2.0.1:
+    resolution: {integrity: sha512-zu2kFxCi8x66budGAEfHcLk0+dcT4EdtiwJ9oIFrvDq8ARJ4T4F3hC0qXc5tn+FzIOYaEOZfO6ew6t6wmGfwpg==}
+    dev: false
+
   /concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
@@ -1040,6 +1054,10 @@ packages:
     dependencies:
       ms: 2.1.3
     dev: true
+
+  /decimal.js@7.1.1:
+    resolution: {integrity: sha512-JAYTBScouq/tbesTv17VT4/Zf4kOguK6LRp9lK8IasQpzC1u4X5z+fNIasI3Le+kBXpo83hyTp6asVgTHIDlGw==}
+    dev: false
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
@@ -1631,6 +1649,10 @@ packages:
       web-streams-polyfill: 4.0.0-beta.3
     dev: false
 
+  /fraction.js@4.0.0:
+    resolution: {integrity: sha512-VFj4e6g5arfi1iH4YOHao6Aq8ZB9e+R4mW8dUZA0qeLqVQWKMc4+4N/U1eTWPuddMsXd0MjwGRFRzBW2G7msBA==}
+    dev: false
+
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
@@ -2165,6 +2187,19 @@ packages:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
     dependencies:
       react: 18.3.1
+    dev: false
+
+  /mathjs@3.11.2:
+    resolution: {integrity: sha512-usttjbeFeA+ubBzc8KIIzDQyAbnBAXvQ9ZPZc7LYLZ1Blji7FaKdW+ATnSO5HIuCdybbII6zsGnen68FT026Gw==}
+    engines: {node: '>= 0.1'}
+    hasBin: true
+    dependencies:
+      complex.js: 2.0.1
+      decimal.js: 7.1.1
+      fraction.js: 4.0.0
+      seed-random: 2.2.0
+      tiny-emitter: 1.0.2
+      typed-function: 0.10.5
     dev: false
 
   /merge2@1.4.1:
@@ -2746,6 +2781,10 @@ packages:
       loose-envify: 1.4.0
     dev: false
 
+  /seed-random@2.2.0:
+    resolution: {integrity: sha512-34EQV6AAHQGhoc0tn/96a9Fsi6v2xdqe/dMUwljGRaFOzR3EgRmECvD0O8vi8X+/uQ50LGHfkNu/Eue5TPKZkQ==}
+    dev: false
+
   /semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
@@ -3026,6 +3065,10 @@ packages:
     dependencies:
       any-promise: 1.3.0
 
+  /tiny-emitter@1.0.2:
+    resolution: {integrity: sha512-y87VH5ncX+MzK2rqEF6v7Ad8gOdQDV1jiFT5bXUrWGBTFN9EFLrvufpWryNipgFDCzQ4fTOTPUCZGLYoQ2D9UA==}
+    dev: false
+
   /to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
@@ -3116,6 +3159,11 @@ packages:
       is-typed-array: 1.1.13
       possible-typed-array-names: 1.0.0
     dev: true
+
+  /typed-function@0.10.5:
+    resolution: {integrity: sha512-5BI8zKF/aZhsXJJKcRvcOuDCzBVY4R08Ok8ilRWHpQ5Np+LwzWeGzaIUNUw++d19Vvv8iqzvaN9/h5WDdY8cmg==}
+    engines: {node: '>= 0.10'}
+    dev: false
 
   /typescript@5.5.3:
     resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
